@@ -1,0 +1,17 @@
+{
+  "id":  "8e2a39b4-37be-4073-b4a6-543b6288e773",
+  "name":  "prompt wars",
+  "projectResources":  {
+    "resources":  [
+      {
+        "folderUri":  "file:///n%3A%5Cprompt%20wars"
+      }
+    ]
+  },
+  "settings":  {
+    "fileAccessPolicy":  "AGENT_SETTING_POLICY_ASK",
+    "internetPolicy":  "AGENT_SETTING_POLICY_ASK",
+    "autoExecutionPolicy":  "CASCADE_COMMANDS_AUTO_EXECUTION_OFF",
+    "artifactReviewMode":  "ARTIFACT_REVIEW_MODE_ALWAYS"
+  }
+}
