@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StadiaAI — Smart Stadium Companion | FIFA World Cup 2026</title>
+  <meta name="description" content="AI-powered smart stadium companion for FIFA World Cup 2026. Real-time navigation, crowd intelligence, multilingual assistance, and operational decision support.">
+  <meta name="theme-color" content="#0a0e1a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <!-- ============================================================ -->
+  <!-- API KEY MODAL                                                  -->
+  <!-- ============================================================ -->
+  <div id="api-key-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        </div>
+        <h2>Welcome to StadiaAI</h2>
+        <p class="text-muted">Enter your Gemini API key to unlock AI features. Get one free at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" class="text-gold">Google AI Studio</a>.</p>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <input type="password" id="api-key-input" class="input" placeholder="Paste your Gemini API key..." autocomplete="off">
+          <button id="api-key-submit" class="btn btn-primary">Connect</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="api-key-skip" class="btn btn-ghost">Skip for now — I'll explore without AI</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- APP SHELL                                                      -->
+  <!-- ============================================================ -->
+  <div id="app" class="app-shell">
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-logo" title="StadiaAI">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span class="sidebar-logo-text">StadiaAI</span>
+      </div>
+
+      <nav class="nav-list" role="navigation" aria-label="Main Navigation">
+        <!-- Home -->
+        <button class="nav-item active" data-page="home" data-tooltip="Dashboard" aria-label="Dashboard">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span class="nav-label">Dashboard</span>
+        </button>
+        <!-- Stadium Map -->
+        <button class="nav-item" data-page="map" data-tooltip="Stadium Map" aria-label="Stadium Map">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+          <span class="nav-label">Stadium Map</span>
+        </button>
+        <!-- AI Chat -->
+        <button class="nav-item" data-page="chat" data-tooltip="AI Assistant" aria-label="AI Assistant">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span class="nav-label">AI Assistant</span>
+        </button>
+        <!-- Crowd Flow -->
+        <button class="nav-item" data-page="crowd" data-tooltip="Crowd Flow" aria-label="Crowd Intelligence">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span class="nav-label">Crowd Flow</span>
+        </button>
+        <!-- Navigate -->
+        <button class="nav-item" data-page="navigate" data-tooltip="Navigate" aria-label="Navigate">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+          <span class="nav-label">Navigate</span>
+        </button>
+        <!-- Transport -->
+        <button class="nav-item" data-page="transport" data-tooltip="Transport" aria-label="Transport">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          <span class="nav-label">Transport</span>
+        </button>
+        <!-- Accessibility -->
+        <button class="nav-item" data-page="accessibility" data-tooltip="Accessibility" aria-label="Accessibility">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="1.5"/><path d="M7 8h10"/><path d="m9 12 3 8"/><path d="m15 12-3 8"/><path d="M12 8v4"/></svg>
+          <span class="nav-label">Accessibility</span>
+        </button>
+        <!-- Sustainability -->
+        <button class="nav-item" data-page="sustainability" data-tooltip="Sustainability" aria-label="Sustainability">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/><path d="M22 10a3 3 0 0 0-3-3h-2.207a5.502 5.502 0 0 0-10.702.5"/></svg>
+          <span class="nav-label">Sustainability</span>
+        </button>
+        <!-- Ops Center -->
+        <button class="nav-item" data-page="ops" data-tooltip="Ops Center" aria-label="Operations Center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          <span class="nav-label">Ops Center</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="nav-item" id="sidebar-settings-btn" data-tooltip="Settings" aria-label="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <span class="nav-label">Settings</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main id="main-content" class="main-content">
+
+      <!-- ===== HEADER ===== -->
+      <header id="header" class="header">
+        <button id="sidebar-toggle" class="btn-icon sidebar-toggle" aria-label="Toggle sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <h1 id="header-title" class="header-title">Dashboard</h1>
+        <div class="header-live-indicator" id="header-live" title="Live data feed active">
+          <span class="live-dot"></span>
+          <span>LIVE</span>
+        </div>
+        <div class="header-spacer"></div>
+        <select id="venue-selector" class="select header-venue" aria-label="Select Venue">
+          <option value="metlife" selected>MetLife Stadium — New York/NJ</option>
+          <option value="sofi">SoFi Stadium — Los Angeles</option>
+          <option value="hard-rock">Hard Rock Stadium — Miami</option>
+          <option value="att">AT&amp;T Stadium — Dallas</option>
+          <option value="mercedes-benz">Mercedes-Benz Stadium — Atlanta</option>
+          <option value="nrg">NRG Stadium — Houston</option>
+          <option value="arrowhead">Arrowhead Stadium — Kansas City</option>
+          <option value="gillette">Gillette Stadium — Boston</option>
+          <option value="lincoln">Lincoln Financial Field — Philadelphia</option>
+          <option value="levis">Levi's Stadium — San Francisco</option>
+          <option value="lumen">Lumen Field — Seattle</option>
+          <option value="azteca">Estadio Azteca — Mexico City</option>
+          <option value="akron">Estadio Akron — Guadalajara</option>
+          <option value="bbva">Estadio BBVA — Monterrey</option>
+          <option value="bmo">BMO Field — Toronto</option>
+          <option value="bc-place">BC Place — Vancouver</option>
+        </select>
+        <div id="role-selector" class="role-selector" aria-label="Select Role">
+          <button class="role-btn active" data-role="fan">🎉 Fan</button>
+          <button class="role-btn" data-role="volunteer">🤝 Volunteer</button>
+          <button class="role-btn" data-role="staff">👷 Staff</button>
+          <button class="role-btn" data-role="organizer">📋 Organizer</button>
+        </div>
+      </header>
+
+      <!-- ===== PAGE CONTAINER ===== -->
+      <div id="page-container" class="page-container">
+
+        <!-- ==================== HOME / DASHBOARD ==================== -->
+        <section id="page-home" class="page active">
+          <!-- Hero -->
+          <div class="home-hero glass-card">
+            <div class="home-hero-content">
+              <span class="badge badge-success">FIFA World Cup 2026™</span>
+              <h2>Welcome to MetLife Stadium</h2>
+              <p class="text-secondary">Your AI-powered companion for the ultimate matchday experience. Navigate, explore, and enjoy — powered by Gemini.</p>
+            </div>
+            <div class="home-hero-graphic">⚽</div>
+          </div>
+
+          <!-- Live Match Card -->
+          <div id="live-match-card" class="glass-card live-match-card">
+            <div class="live-match-header">
+              <span class="badge badge-danger">● LIVE</span>
+              <span class="text-muted">Group C — Match 37</span>
+              <span class="text-muted" id="live-match-minute">67'</span>
+            </div>
+            <div class="live-match-teams">
+              <div class="team">
+                <span class="team-flag">🇧🇷</span>
+                <span class="team-name">Brazil</span>
+              </div>
+              <div class="live-score">
+                <span id="live-score-1">2</span>
+                <span class="score-divider">—</span>
+                <span id="live-score-2">1</span>
+              </div>
+              <div class="team">
+                <span class="team-flag">🇩🇪</span>
+                <span class="team-name">Germany</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats Grid -->
+          <div class="stats-grid">
+            <div class="stat-card glass-card hover-lift animate-in stagger-1">
+              <div class="stat-icon" style="background: rgba(0,201,167,0.15); color: var(--accent-teal);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value" id="stats-attendance">72,450</div>
+                <div class="stat-label">Current Attendance</div>
+              </div>
+            </div>
+            <div class="stat-card glass-card hover-lift animate-in stagger-2">
+              <div class="stat-icon" style="background: rgba(59,130,246,0.15); color: var(--accent-blue);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value" id="stats-wait-time">4 min</div>
+                <div class="stat-label">Avg. Wait Time</div>
+              </div>
+            </div>
+            <div class="stat-card glass-card hover-lift animate-in stagger-3">
+              <div class="stat-icon" style="background: rgba(245,158,11,0.15); color: var(--accent-orange);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value" id="stats-alerts">2</div>
+                <div class="stat-label">Active Alerts</div>
+              </div>
+            </div>
+            <div class="stat-card glass-card hover-lift animate-in stagger-4">
+              <div class="stat-icon" style="background: rgba(139,92,246,0.15); color: var(--accent-purple);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </div>
+              <div class="stat-info">
+                <div class="stat-value" id="stats-security">All Clear</div>
+                <div class="stat-label">Security Status</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <h3 class="section-title">Quick Actions</h3>
+          <div class="quick-actions-grid">
+            <button class="quick-action-card glass-card hover-lift" data-page="navigate">
+              <div class="quick-action-icon" style="color: var(--accent-teal);">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+              </div>
+              <span class="quick-action-label">Find My Seat</span>
+            </button>
+            <button class="quick-action-card glass-card hover-lift" data-page="chat">
+              <div class="quick-action-icon" style="color: var(--accent-gold);">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              </div>
+              <span class="quick-action-label">Ask AI Assistant</span>
+            </button>
+            <button class="quick-action-card glass-card hover-lift" data-page="map">
+              <div class="quick-action-icon" style="color: var(--accent-blue);">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/></svg>
+              </div>
+              <span class="quick-action-label">Stadium Map</span>
+            </button>
+            <button class="quick-action-card glass-card hover-lift" data-page="transport">
+              <div class="quick-action-icon" style="color: var(--accent-purple);">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              </div>
+              <span class="quick-action-label">Plan My Trip</span>
+            </button>
+            <button class="quick-action-card glass-card hover-lift" data-page="crowd">
+              <div class="quick-action-icon" style="color: var(--accent-orange);">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              </div>
+              <span class="quick-action-label">Crowd Status</span>
+            </button>
+            <button class="quick-action-card glass-card hover-lift" data-page="accessibility">
+              <div class="quick-action-icon" style="color: var(--accent-red);">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="4" r="1.5"/><path d="M7 8h10"/><path d="m9 12 3 8"/><path d="m15 12-3 8"/><path d="M12 8v4"/></svg>
+              </div>
+              <span class="quick-action-label">Accessibility</span>
+            </button>
+          </div>
+
+          <!-- Upcoming Matches -->
+          <h3 class="section-title">Upcoming at MetLife Stadium</h3>
+          <div id="upcoming-matches" class="upcoming-matches-grid">
+            <!-- Rendered by JS -->
+          </div>
+        </section>
+
+        <!-- ==================== STADIUM MAP ==================== -->
+        <section id="page-map" class="page">
+          <div class="map-container">
+            <div class="map-viewport">
+              <div id="stadium-svg-container" class="stadium-svg-container">
+                <!-- SVG rendered by stadium-map.js -->
+              </div>
+              <div class="map-controls">
+                <button id="map-zoom-in" class="btn-icon" title="Zoom In" aria-label="Zoom in">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <button id="map-zoom-out" class="btn-icon" title="Zoom Out" aria-label="Zoom out">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+                <button id="map-reset" class="btn-icon" title="Reset View" aria-label="Reset map view">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                </button>
+              </div>
+              <div class="map-legend glass-card">
+                <h4>Crowd Density</h4>
+                <div class="legend-item"><span class="legend-color" style="background:#22c55e;"></span>Low (&lt;50%)</div>
+                <div class="legend-item"><span class="legend-color" style="background:#eab308;"></span>Medium (50-70%)</div>
+                <div class="legend-item"><span class="legend-color" style="background:#f97316;"></span>High (70-85%)</div>
+                <div class="legend-item"><span class="legend-color" style="background:#ef4444;"></span>Very High (&gt;85%)</div>
+              </div>
+            </div>
+            <div id="zone-info-panel" class="zone-info-panel glass-card">
+              <h3>Zone Details</h3>
+              <p class="text-muted">Click on a zone on the map to view details.</p>
+              <div id="zone-details-content">
+                <!-- Populated by stadium-map.js -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== AI CHAT ==================== -->
+        <section id="page-chat" class="page">
+          <div class="chat-container">
+            <div class="chat-header glass-card">
+              <div class="chat-header-left">
+                <div class="chat-ai-avatar">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <div>
+                  <h3>StadiaAI Assistant</h3>
+                  <span class="text-muted text-sm">Multilingual • FIFA World Cup 2026</span>
+                </div>
+              </div>
+              <div class="chat-header-right">
+                <select id="chat-language-select" class="select select-sm" aria-label="Chat language">
+                  <option value="auto">🌐 Auto-detect</option>
+                  <option value="en">🇬🇧 English</option>
+                  <option value="es">🇪🇸 Español</option>
+                  <option value="fr">🇫🇷 Français</option>
+                  <option value="pt">🇧🇷 Português</option>
+                  <option value="de">🇩🇪 Deutsch</option>
+                  <option value="ar">🇸🇦 العربية</option>
+                  <option value="hi">🇮🇳 हिन्दी</option>
+                  <option value="ja">🇯🇵 日本語</option>
+                  <option value="zh">🇨🇳 中文</option>
+                </select>
+                <button id="chat-clear-btn" class="btn btn-ghost btn-sm" title="Clear chat">Clear</button>
+              </div>
+            </div>
+
+            <div id="chat-messages" class="chat-messages">
+              <div class="chat-message chat-message--ai">
+                <div class="chat-avatar">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg>
+                </div>
+                <div class="chat-bubble chat-bubble--ai">
+                  <p>Hello! 👋 I'm <strong>StadiaAI</strong>, your personal assistant for the FIFA World Cup 2026 at MetLife Stadium.</p>
+                  <p>I can help you with:</p>
+                  <ul>
+                    <li>🧭 Finding your seat, food, or restrooms</li>
+                    <li>🚗 Transportation and parking</li>
+                    <li>♿ Accessibility information</li>
+                    <li>📋 Match schedules and rules</li>
+                    <li>🌍 I speak multiple languages!</li>
+                  </ul>
+                  <p>How can I help you today?</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="chat-suggestions" id="chat-suggestions">
+              <button class="chat-suggestion-btn" data-message="Where is the nearest food court?">🍔 Nearest food</button>
+              <button class="chat-suggestion-btn" data-message="How do I get to Section 215?">🧭 Find my seat</button>
+              <button class="chat-suggestion-btn" data-message="¿Dónde están los baños más cercanos?">🚻 Restrooms (ES)</button>
+              <button class="chat-suggestion-btn" data-message="What's the current match score?">⚽ Match score</button>
+              <button class="chat-suggestion-btn" data-message="Is there accessible seating available?">♿ Accessible seats</button>
+              <button class="chat-suggestion-btn" data-message="What time does the last NJ Transit train leave?">🚆 Last train</button>
+            </div>
+
+            <div class="chat-input-area">
+              <input type="text" id="chat-input" class="input" placeholder="Ask me anything about the stadium..." autocomplete="off">
+              <button id="chat-send-btn" class="btn btn-primary btn-icon" title="Send message" aria-label="Send message">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== CROWD INTELLIGENCE ==================== -->
+        <section id="page-crowd" class="page">
+          <div class="crowd-header">
+            <h2>Crowd Intelligence</h2>
+            <div class="header-live-indicator">
+              <span class="live-dot"></span>
+              <span>Real-time monitoring</span>
+            </div>
+          </div>
+
+          <div id="crowd-ai-insight" class="ai-insight-card glass-card" style="display:none;">
+            <!-- AI prediction displayed here -->
+          </div>
+
+          <div class="crowd-stats-grid" id="crowd-stats-grid">
+            <div class="stat-card glass-card hover-lift">
+              <div class="stat-info">
+                <div class="stat-value" id="crowd-total">72,450</div>
+                <div class="stat-label">Total Attendance</div>
+              </div>
+            </div>
+            <div class="stat-card glass-card hover-lift">
+              <div class="stat-info">
+                <div class="stat-value" id="crowd-avg-density">68%</div>
+                <div class="stat-label">Avg. Density</div>
+              </div>
+            </div>
+            <div class="stat-card glass-card hover-lift">
+              <div class="stat-info">
+                <div class="stat-value" id="crowd-peak-zone">North Stand</div>
+                <div class="stat-label">Peak Zone</div>
+              </div>
+            </div>
+            <div class="stat-card glass-card hover-lift">
+              <div class="stat-info">
+                <div class="stat-value" id="crowd-predicted-peak">Half-time</div>
+                <div class="stat-label">Predicted Peak</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="crowd-grid">
+            <div class="crowd-zone-table-container glass-card">
+              <h3>Zone Density Breakdown</h3>
+              <table class="crowd-zone-table" id="crowd-zone-table">
+                <thead>
+                  <tr>
+                    <th>Zone</th>
+                    <th>Type</th>
+                    <th>Capacity</th>
+                    <th>Current</th>
+                    <th>Density</th>
+                  </tr>
+                </thead>
+                <tbody id="crowd-zone-tbody">
+                  <!-- Rendered by crowd.js -->
+                </tbody>
+              </table>
+            </div>
+            <div class="crowd-alerts-container glass-card">
+              <h3>Live Alerts</h3>
+              <div id="crowd-alerts-feed" class="alerts-feed">
+                <!-- Rendered by crowd.js -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== NAVIGATION ==================== -->
+        <section id="page-navigate" class="page">
+          <div class="navigate-layout">
+            <div class="navigate-controls glass-card">
+              <h3>Wayfinder</h3>
+              <p class="text-muted">Get AI-powered directions anywhere in the stadium.</p>
+
+              <div class="navigate-form">
+                <label class="input-label" for="nav-from-select">From</label>
+                <select id="nav-from-select" class="select">
+                  <!-- Populated by navigation.js -->
+                </select>
+
+                <label class="input-label" for="nav-to-select">To</label>
+                <select id="nav-to-select" class="select">
+                  <!-- Populated by navigation.js -->
+                </select>
+
+                <div class="navigate-options">
+                  <label class="toggle-label">
+                    <input type="checkbox" id="nav-accessible-toggle" class="toggle-input">
+                    <span class="toggle-switch"></span>
+                    <span>Wheelchair-accessible route</span>
+                  </label>
+                </div>
+
+                <button id="nav-route-btn" class="btn btn-primary btn-lg" style="width:100%;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                  Find Route
+                </button>
+              </div>
+            </div>
+
+            <div id="nav-route-display" class="navigate-result glass-card">
+              <div class="navigate-placeholder">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                <p class="text-muted">Select your start and destination, then tap "Find Route" to get AI-powered directions.</p>
+              </div>
+              <div id="nav-route-content" style="display:none;">
+                <div class="nav-route-summary">
+                  <div class="nav-time-estimate">
+                    <span class="stat-value" id="nav-time-estimate">—</span>
+                    <span class="stat-label">Est. walk time</span>
+                  </div>
+                  <div class="nav-distance">
+                    <span class="stat-value" id="nav-distance">—</span>
+                    <span class="stat-label">Distance</span>
+                  </div>
+                </div>
+                <div id="nav-steps-list" class="nav-steps-list">
+                  <!-- Rendered by navigation.js -->
+                </div>
+                <div id="nav-ai-tip" class="ai-insight-card glass-card" style="display:none;">
+                  <!-- AI tip displayed here -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== TRANSPORT ==================== -->
+        <section id="page-transport" class="page">
+          <div class="transport-header">
+            <h2>Transport Planner</h2>
+            <button id="transport-ai-btn" class="btn btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 8v4l3 3"/></svg>
+              Get AI Travel Plan
+            </button>
+          </div>
+
+          <div id="transport-ai-plan" class="ai-plan-card glass-card" style="display:none;">
+            <div class="ai-plan-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg>
+              <h3>AI Travel Recommendation</h3>
+            </div>
+            <div id="transport-ai-content" class="ai-plan-content">
+              <!-- Streamed by transport.js -->
+            </div>
+          </div>
+
+          <div id="transport-tabs" class="tab-group">
+            <button class="tab active" data-tab="transit">🚆 Transit</button>
+            <button class="tab" data-tab="driving">🚗 Driving</button>
+            <button class="tab" data-tab="rideshare">🚕 Rideshare</button>
+            <button class="tab" data-tab="walking">🚶 Walking</button>
+          </div>
+
+          <div id="transport-content" class="transport-content">
+            <!-- Rendered by transport.js based on active tab -->
+          </div>
+        </section>
+
+        <!-- ==================== ACCESSIBILITY ==================== -->
+        <section id="page-accessibility" class="page">
+          <div class="accessibility-hero glass-card">
+            <div class="accessibility-hero-content">
+              <h2>Accessibility Hub</h2>
+              <p class="text-secondary">MetLife Stadium is committed to providing an inclusive experience for all guests.</p>
+            </div>
+            <label class="toggle-label accessibility-mode-toggle">
+              <input type="checkbox" id="accessibility-toggle" class="toggle-input">
+              <span class="toggle-switch"></span>
+              <span>Enhanced Accessibility Mode</span>
+            </label>
+          </div>
+
+          <div class="accessibility-emergency glass-card" id="accessibility-emergency">
+            <div class="emergency-content">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <div>
+                <h3>Need Assistance?</h3>
+                <p class="text-muted">Request help from stadium staff. They will be directed to your location.</p>
+              </div>
+            </div>
+            <button id="accessibility-emergency-btn" class="btn btn-danger">Request Assistance</button>
+          </div>
+
+          <h3 class="section-title">Available Services</h3>
+          <div id="accessibility-features" class="accessibility-features-grid">
+            <!-- Rendered by accessibility.js -->
+          </div>
+
+          <h3 class="section-title">Accessible Route Finder</h3>
+          <div class="accessibility-route-finder glass-card">
+            <div class="navigate-form">
+              <label class="input-label" for="acc-from-select">From</label>
+              <select id="acc-from-select" class="select">
+                <!-- Populated by accessibility.js -->
+              </select>
+              <label class="input-label" for="acc-to-select">To</label>
+              <select id="acc-to-select" class="select">
+                <!-- Populated by accessibility.js -->
+              </select>
+              <button id="acc-route-btn" class="btn btn-primary" style="width:100%;">Find Accessible Route</button>
+            </div>
+            <div id="acc-route-result"></div>
+          </div>
+        </section>
+
+        <!-- ==================== SUSTAINABILITY ==================== -->
+        <section id="page-sustainability" class="page">
+          <div class="sustainability-hero glass-card">
+            <div class="sustainability-hero-content">
+              <span class="badge badge-success">🌱 Green Stadium Initiative</span>
+              <h2>Sustainability Dashboard</h2>
+              <p class="text-secondary">Tracking our environmental impact for a greener World Cup.</p>
+            </div>
+            <div class="green-score-display">
+              <div class="green-score-value" id="sustainability-green-score">73</div>
+              <div class="green-score-label">Green Score</div>
+            </div>
+          </div>
+
+          <div id="sustainability-gauges" class="sustainability-gauges">
+            <!-- 3 circular gauges rendered by sustainability.js -->
+          </div>
+
+          <div class="sustainability-stats-grid">
+            <div class="stat-card glass-card hover-lift">
+              <div class="stat-info">
+                <div class="stat-value" id="sust-carbon">12.4 tons</div>
+                <div class="stat-label">Carbon Saved Today</div>
+              </div>
+            </div>
+            <div class="stat-card glass-card hover-lift">
+              <div class="stat-info">
+                <div class="stat-value" id="sust-trees">340</div>
+                <div class="stat-label">Trees Equivalent</div>
+              </div>
+            </div>
+            <div class="stat-card glass-card hover-lift">
+              <div class="stat-info">
+                <div class="stat-value" id="sust-water">28,500 L</div>
+                <div class="stat-label">Water Saved</div>
+              </div>
+            </div>
+            <div class="stat-card glass-card hover-lift">
+              <div class="stat-info">
+                <div class="stat-value" id="sust-renewable">64%</div>
+                <div class="stat-label">Renewable Energy</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sustainability-tips-section">
+            <div class="glass-card">
+              <h3>🤖 AI Eco-Tips</h3>
+              <div id="sustainability-tips">
+                <!-- Rendered by sustainability.js -->
+              </div>
+            </div>
+            <div class="glass-card sustainability-challenge">
+              <h3>🏆 Today's Eco Challenge</h3>
+              <p>Use public transit to attend today's match and earn <strong class="text-gold">50 Prompt Credits!</strong></p>
+              <div class="progress-bar" style="margin-top:12px;">
+                <div class="progress-fill" style="width:63%;"></div>
+              </div>
+              <p class="text-muted text-sm" style="margin-top:8px;">63% of fans chose sustainable transport today</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================== OPS CENTER ==================== -->
+        <section id="page-ops" class="page">
+          <div class="ops-header">
+            <h2>Operations Command Center</h2>
+            <div class="ops-header-badges">
+              <span class="badge badge-info">Staff & Organizer View</span>
+              <div class="header-live-indicator">
+                <span class="live-dot"></span>
+                <span>Operational</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="ops-stats-bar" class="stats-grid">
+            <div class="stat-card glass-card">
+              <div class="stat-info">
+                <div class="stat-value" id="ops-active-incidents">3</div>
+                <div class="stat-label">Active Incidents</div>
+              </div>
+            </div>
+            <div class="stat-card glass-card">
+              <div class="stat-info">
+                <div class="stat-value" id="ops-resolved">14</div>
+                <div class="stat-label">Resolved Today</div>
+              </div>
+            </div>
+            <div class="stat-card glass-card">
+              <div class="stat-info">
+                <div class="stat-value" id="ops-response-time">4.2 min</div>
+                <div class="stat-label">Avg Response Time</div>
+              </div>
+            </div>
+            <div class="stat-card glass-card">
+              <div class="stat-info">
+                <div class="stat-value" id="ops-staff-count">248</div>
+                <div class="stat-label">Staff Deployed</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Match Day Timeline -->
+          <div class="ops-timeline-container glass-card">
+            <h3>Match Day Timeline</h3>
+            <div id="ops-timeline" class="ops-timeline">
+              <!-- Rendered by ops.js -->
+            </div>
+          </div>
+
+          <div class="ops-layout">
+            <div class="ops-alerts-section">
+              <h3>Live Incident Feed</h3>
+              <div id="ops-alert-feed" class="ops-alert-feed">
+                <!-- Rendered by ops.js -->
+              </div>
+            </div>
+            <div class="ops-right-section">
+              <div id="ops-ai-panel" class="ops-ai-panel glass-card">
+                <div class="ai-plan-header">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4a853" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/></svg>
+                  <h3>AI Decision Support</h3>
+                </div>
+                <div id="ops-ai-content" class="ai-plan-content">
+                  <p class="text-muted">Click "Get AI Advice" on any incident to receive real-time decision support.</p>
+                </div>
+              </div>
+              <div class="glass-card">
+                <h3>Resource Overview</h3>
+                <div id="ops-resource-grid" class="ops-resource-grid">
+                  <!-- Rendered by ops.js -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /page-container -->
+    </main>
+  </div><!-- /app -->
+
+  <!-- Toast container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Scripts (load order matters) -->
+  <script src="js/utils.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/gemini.js"></script>
+  <script src="js/stadium-map.js"></script>
+  <script src="js/crowd.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/transport.js"></script>
+  <script src="js/accessibility.js"></script>
+  <script src="js/sustainability.js"></script>
+  <script src="js/ops.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
